@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#cf3f2b" />
+  <meta name="description" content="Digital identities: which one is yours? An interactive Friendvision personality quiz." />
+  <title>Digital Identities — Friendvision</title>
+  <style>
+    :root{--red:#ce3f2b;--mint:#a6e9d5;--mint2:#d5f6eb;--paper:#f7f4ef;--ink:#181818;--blue:#2f48bc;--line:#181818;--muted:#605d58}
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+    button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
+    .app{min-height:100vh;overflow:hidden;position:relative}
+    .app::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.13;background-image:radial-gradient(#1a1a1a 0.45px,transparent .45px);background-size:7px 7px;z-index:0}
+    .container{width:min(1160px,calc(100% - 54px));margin-inline:auto;position:relative;z-index:1}
+    .nav{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid var(--ink)}
+    .brand{font-style:italic;font-size:32px;font-weight:900;letter-spacing:-2px;color:var(--ink);display:inline-flex;align-items:center;text-decoration:none;line-height:1}
+    .brand-mark{display:inline-flex;background:var(--mint);transform:rotate(-3deg);padding:5px 9px 8px;box-shadow:3px 3px 0 var(--ink)}
+    .navmeta{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:16px}
+    .navmeta .dot{width:9px;height:9px;border-radius:50%;background:var(--red);border:1px solid var(--ink)}
+    .nav-action{border:none;background:transparent;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:1px;padding:10px}
+    .nav-action:hover{text-decoration:underline}
+    .eyebrow{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:2px}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;min-height:665px;gap:25px;padding:72px 0 74px}
+    .hero-copy{position:relative;z-index:2}
+    .issue{display:flex;gap:10px;align-items:center;margin-bottom:28px}
+    .issue span{display:inline-block;border:1.5px solid var(--ink);padding:7px 11px;background:var(--paper);transform:rotate(-2deg);font-size:12px;font-weight:800}
+    h1{margin:0;font-size:clamp(60px,8vw,113px);line-height:.89;font-weight:900;font-style:italic;letter-spacing:-7px}
+    h1 .line{display:block}
+    .marker{display:inline-block;background:var(--mint);padding:0 19px 12px 10px;margin:6px 0 0 -8px;transform:rotate(-2deg);box-shadow:5px 5px 0 rgba(0,0,0,.1)}
+    .hero-sub{max-width:500px;font-size:26px;line-height:1.25;font-weight:800;letter-spacing:-.6px;margin:30px 0 12px}
+    .hero-note{max-width:475px;font-size:15px;line-height:1.52;margin:0 0 30px;color:#37342e}
+    .primary{border:2px solid var(--ink);background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:space-between;gap:50px;min-height:59px;padding:0 20px;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:.5px;box-shadow:5px 5px 0 var(--red);transition:transform .15s,box-shadow .15s}
+    .primary:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--red)}
+    .primary .arr{font-size:27px;font-weight:400}
+    .text-btn{border:0;background:transparent;text-transform:uppercase;font-size:12px;font-weight:900;letter-spacing:.8px;padding:15px 2px;text-decoration:underline;text-underline-offset:4px}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:25px;align-items:center}
+    .hero-art{height:545px;position:relative;isolation:isolate}
+    .poster{position:absolute;inset:22px 9px 12px 31px;background:var(--red);border:2px solid var(--ink);transform:rotate(3deg);box-shadow:12px 14px 0 var(--ink);padding:27px 25px;overflow:hidden}
+    .poster:before{content:"";position:absolute;border-radius:50%;width:410px;height:410px;background:var(--mint);top:90px;right:-172px}
+    .poster:after{content:"";position:absolute;border:1.5px dashed var(--paper);width:280px;height:280px;border-radius:50%;left:-110px;bottom:-80px}
+    .poster-top{position:relative;z-index:1;display:flex;justify-content:space-between;color:white;font-size:11px;font-weight:800;letter-spacing:1px}
+    .mini-browser{position:relative;z-index:1;margin-top:38px;background:var(--paper);border:2px solid var(--ink);transform:rotate(-5deg);box-shadow:7px 7px 0 var(--ink);padding-bottom:16px}
+    .browser-bar{height:30px;border-bottom:2px solid var(--ink);display:flex;align-items:center;padding:0 12px;gap:5px;background:var(--mint)}
+    .browser-bar i{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--ink)}
+    .browser-url{margin-left:auto;font-size:9px;letter-spacing:.5px;font-weight:700}
+    .browser-body{padding:18px 20px 12px}
+    .browser-title{font-size:16px;font-weight:900;font-style:italic;line-height:1.2;margin:0 0 12px}
+    .identities-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+    .identity-sticker{aspect-ratio:.81;border:1.5px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:3px;padding:8px 3px 5px;background:white;overflow:hidden}
+    .identity-sticker:nth-child(2),.identity-sticker:nth-child(7){background:var(--mint)}
+    .identity-sticker:nth-child(3),.identity-sticker:nth-child(8){background:#f7c9b5}
+    .identity-sticker:nth-child(4){background:#e8e3ff}
+    .identity-sticker:nth-child(5){background:#ffebb1}
+    .identity-sticker span{font-size:clamp(18px,2.8vw,34px);line-height:1.25}
+    .identity-sticker b{font-size:8px;text-align:center;text-transform:uppercase;line-height:1.1}
+    .swoosh{font-family:Georgia,serif;font-size:38px;color:var(--paper);font-style:italic;position:absolute;right:-27px;top:-16px;transform:rotate(16deg);z-index:2;text-shadow:2px 3px 0 var(--ink)}
+    .star{position:absolute;z-index:4;font-size:55px;color:var(--mint);text-shadow:2px 3px var(--ink);line-height:1}
+    .star.one{left:0;top:10px}.star.two{right:-19px;bottom:42px;color:#fff;font-size:69px}
+    .stamp{position:absolute;z-index:3;bottom:15px;left:6px;background:var(--mint);border:2px solid var(--ink);padding:12px 20px;font-size:15px;font-weight:900;font-style:italic;transform:rotate(-12deg);box-shadow:4px 4px 0 var(--ink)}
+    .marquee{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);background:var(--mint);padding:18px 0;font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:1.7px;overflow:hidden;white-space:nowrap;position:relative;z-index:1}
+    .marquee-track{display:inline-block;animation:marquee 34s linear infinite}
+    @keyframes marquee{to{transform:translateX(-50%)}}
+    .marquee b{color:var(--red);padding:0 24px;font-size:23px;vertical-align:-2px}
+    .section-foot{display:flex;justify-content:space-between;align-items:center;padding:26px 0 40px;font-size:10px;letter-spacing:1px;font-weight:900;text-transform:uppercase}
+    .section-foot svg{width:42px;height:30px}
+    .home-view,.quiz-view,.result-view,.all-view{display:none}
+    .active-view{display:block}
+    .quiz-view{padding:54px 0 66px}
+    .game-top{display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1.5px solid var(--ink);padding-bottom:16px}
+    .game-top strong{font-size:13px;text-transform:uppercase;letter-spacing:1px}
+    .game-top .game-controls{display:flex;gap:18px}
+    .game-top button{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px;border:none;background:transparent;text-decoration:underline;text-underline-offset:4px}
+    .game-top button:disabled{color:#aaa;cursor:not-allowed;text-decoration:none}
+    .quiz-stage{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:40px;min-height:535px;padding:54px 0 40px;align-items:center}
+    .question-area{position:relative;max-width:800px}
+    .question-area::before{content:"✳";position:absolute;right:14px;top:-70px;color:var(--red);font-size:70px;transform:rotate(13deg)}
+    .q-number{display:inline-block;padding:9px 13px;background:var(--red);color:white;font-size:12px;font-weight:900;letter-spacing:1.8px;text-transform:uppercase;transform:rotate(-3deg)}
+    .q-card{background:var(--mint);border:2px solid var(--ink);border-radius:115px 95px 105px 85px / 50px 62px 42px 60px;padding:60px 45px;min-height:275px;display:flex;align-items:center;justify-content:center;text-align:center;margin-top:28px;box-shadow:9px 10px 0 var(--ink);position:relative}
+    .q-card::after{content:"";position:absolute;width:28px;height:28px;right:45px;bottom:-18px;background:var(--mint);border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(45deg)}
+    #question-text{font-size:clamp(29px,4.2vw,52px);font-weight:900;font-style:italic;line-height:1.05;letter-spacing:-1.9px;margin:0}
+    .answer-row{margin-top:45px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .answer{position:relative;border:2px solid var(--ink);background:var(--paper);min-height:77px;padding:13px 19px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:7px;transition:transform .15s,background .15s}
+    .answer:hover,.answer:focus-visible{background:var(--mint2);transform:translateY(-3px)}
+    .answer:first-child{background:var(--red);color:white}
+    .answer:first-child:hover{background:#e05b46}
+    .answer .answer-main{font-weight:900;font-size:21px;font-style:italic;letter-spacing:-.5px}
+    .answer .answer-sub{font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:.9px;opacity:.85;display:block;margin-top:4px;font-style:normal}
+    .answer .answer-arrow{font-size:28px;font-weight:400}
+    .side-note{border:2px solid var(--ink);background:var(--paper);transform:rotate(2deg);padding:19px 21px 24px;box-shadow:7px 7px 0 var(--mint)}
+    .side-note .topline{font-size:12px;display:flex;justify-content:space-between;font-weight:900;text-transform:uppercase;border-bottom:1.5px solid var(--ink);padding-bottom:12px}
+    .branch-visual{height:147px;display:flex;align-items:center;justify-content:center}
+    .branch-visual svg{width:100%;height:100%}
+    .branch-desc{font-size:20px;font-style:italic;font-weight:900;line-height:1.17;margin:13px 0 8px}
+    .branch-small{font-size:12px;line-height:1.45;margin:0}
+    .trail-title{margin-top:30px;font-size:10px;letter-spacing:1.3px;text-transform:uppercase;font-weight:900}
+    .trail{min-height:80px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:12px}
+    .trail-step{border:1px solid var(--ink);font-size:11px;font-weight:800;padding:8px 10px;background:white;max-width:100%;line-height:1.3}
+    .trail-step b{background:var(--mint);padding:2px 5px;margin-left:4px;white-space:nowrap}
+    .progress{display:flex;align-items:center;gap:8px;margin-top:22px}
+    .progress-bar{height:7px;border:1px solid var(--ink);background:var(--paper);flex:1}.progress-bar.filled{background:var(--red)}
+    .result-view{padding:43px 0 76px}
+    .result-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid var(--ink);padding-bottom:17px;margin-bottom:36px}
+    .result-head .issue-line{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1.4px}
+    .result-head button{border:none;background:transparent;font-size:12px;font-weight:900;text-decoration:underline;text-transform:uppercase;letter-spacing:.6px}
+    .result-layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:50px;align-items:center}
+    .result-paper{background:var(--red);border:2px solid var(--ink);min-height:540px;padding:28px;position:relative;overflow:hidden;box-shadow:12px 12px 0 var(--ink)}
+    .result-paper::before{content:"";position:absolute;left:-75px;bottom:-115px;width:400px;height:400px;border-radius:50%;background:var(--mint)}
+    .result-paper::after{content:"✳";position:absolute;right:-15px;top:67px;color:var(--mint);font-size:140px;line-height:1}
+    .result-paper .paper-top{display:flex;justify-content:space-between;position:relative;color:white;font-size:11px;font-weight:900;letter-spacing:1px;z-index:1}
+    .result-paper .paper-kicker{display:inline-block;background:var(--mint);padding:9px 12px;transform:rotate(-3deg);font-size:13px;font-weight:900;text-transform:uppercase;margin-top:52px;position:relative;z-index:1}
+    .result-paper h2{position:relative;z-index:1;color:#fff;font-style:italic;font-weight:900;line-height:.97;font-size:clamp(43px,5.8vw,73px);letter-spacing:-3.3px;max-width:610px;text-transform:uppercase;margin:25px 0 18px;overflow-wrap:anywhere}
+    .result-paper h2 span{background:var(--ink);-webkit-box-decoration-break:clone;box-decoration-break:clone;padding:1px 10px 5px}
+    .result-paper .paper-emoji{position:absolute;right:20px;bottom:67px;font-size:clamp(90px,12vw,155px);filter:drop-shadow(4px 7px 0 #181818);transform:rotate(12deg);z-index:1}
+    .result-paper .paper-footer{position:absolute;left:27px;bottom:25px;z-index:1;font-size:14px;font-weight:900;font-style:italic;max-width:65%}
+    .result-copy h3{font-size:31px;font-weight:900;font-style:italic;letter-spacing:-1px;margin:11px 0 18px;line-height:1.06}
+    .result-copy p{font-size:17px;line-height:1.5;margin:0 0 27px}
+    .receipts{border-top:2px solid var(--ink);margin:29px 0 27px;padding-top:13px}
+    .receipts .eyebrow{color:var(--red);margin-bottom:15px}
+    .receipt{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #aaa;font-size:14px;font-weight:800}
+    .receipt .tick{background:var(--mint);border-radius:100%;height:23px;width:23px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .result-actions{display:flex;flex-wrap:wrap;gap:13px;align-items:center}
+    .outline{padding:17px 20px;border:2px solid var(--ink);background:transparent;text-transform:uppercase;font-size:12px;font-weight:900;letter-spacing:.5px;min-height:57px}
+    .outline:hover{background:var(--mint)}
+    .status{font-size:12px;min-height:18px;margin:16px 0 0;font-weight:800;color:var(--blue)}
+    .all-view{padding:55px 0 90px}
+    .all-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:25px;margin:0 0 29px}
+    .all-heading h2{font-size:clamp(48px,7vw,83px);line-height:.97;letter-spacing:-4px;font-style:italic;text-transform:uppercase;margin:12px 0 0}
+    .all-intro{max-width:360px;font-size:15px;line-height:1.5}
+    .all-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .all-card{border:2px solid var(--ink);padding:20px 16px 17px;background:white;min-height:286px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;transition:transform .15s,box-shadow .15s}
+    .all-card:nth-child(4n+1){background:var(--mint)}.all-card:nth-child(4n+2){background:var(--red);color:white}.all-card:nth-child(4n+3){background:#ffede8}.all-card:nth-child(4n){background:#e5e6fc}
+    .all-card:hover{transform:translate(-3px,-4px);box-shadow:7px 7px 0 var(--ink)}
+    .all-card .smallcaps{font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:900}
+    .all-card .emoji{font-size:57px;margin:18px 0 14px}
+    .all-card .name{font-size:21px;line-height:1.06;font-style:italic;font-weight:900;text-transform:uppercase;letter-spacing:-.7px}
+    .all-card .tagline{font-size:12px;line-height:1.4;margin-top:12px}
+    .all-card .link-arrow{margin-top:auto;align-self:flex-end;font-size:26px}
+    .all-back{margin:0 0 25px}
+    .all-back button{border:0;background:none;font-size:12px;text-transform:uppercase;font-weight:900;text-decoration:underline;letter-spacing:1px;padding:0}
+    .safeline{position:fixed;bottom:16px;right:16px;background:var(--ink);color:white;font-size:10px;letter-spacing:1px;padding:7px 10px;transform:rotate(-2deg);z-index:10;pointer-events:none}
+    @media(max-width:900px){.hero{grid-template-columns:1fr 0.85fr;min-height:570px}.hero-art{height:430px}.poster{inset:12px 6px 12px 8px}.mini-browser{margin-top:36px}.browser-body{padding:12px}.identity-sticker{padding:5px 2px}.identity-sticker span{font-size:23px}.identity-sticker b{font-size:6px}.stamp{font-size:11px}.hero-sub{font-size:23px}h1{letter-spacing:-5px}.quiz-stage{grid-template-columns:minmax(0,1fr) 240px;gap:23px}.result-layout{grid-template-columns:minmax(0,1fr) 310px;gap:30px}.result-paper{min-height:505px}.all-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.all-card{min-height:260px;padding:14px}.all-card .name{font-size:18px}}
+    @media(max-width:680px){.container{width:calc(100% - 34px)}.nav{height:72px}.brand{font-size:28px}.navmeta{font-size:9px;letter-spacing:.2px;gap:7px}.navmeta>span:not(.dot){display:none}.nav-action{font-size:10px;padding:5px}.hero{grid-template-columns:1fr;gap:0;padding:43px 0 34px;min-height:auto}.hero-copy{max-width:570px}.issue{margin-bottom:25px}.hero h1{font-size:clamp(66px,14vw,104px);letter-spacing:-5px}.hero-sub{font-size:24px;margin:28px 0 11px}.hero-note{font-size:15px;max-width:520px}.hero-art{width:min(480px,100%);margin:38px auto 15px;height:450px}.poster{inset:16px 19px 15px 30px}.mini-browser{margin-top:40px}.identity-sticker{aspect-ratio:.9}.identity-sticker span{font-size:31px}.identity-sticker b{font-size:8px}.section-foot{padding:24px 0 29px}.quiz-view{padding:25px 0 48px}.quiz-stage{grid-template-columns:1fr;gap:21px;padding:40px 0 20px}.q-card{min-height:255px;padding:45px 25px;margin-top:27px}.question-area::before{right:0;top:-60px;font-size:60px}#question-text{font-size:clamp(33px,7.5vw,52px);letter-spacing:-1.2px}.answer-row{gap:11px;margin-top:34px}.answer{min-height:88px;padding:12px}.answer .answer-main{font-size:19px}.answer .answer-sub{font-size:9px}.side-note{transform:none;box-shadow:5px 5px 0 var(--mint);display:grid;grid-template-columns:1fr 1fr;gap:0 20px}.side-note .topline{grid-column:1/-1}.branch-visual{height:100px}.branch-desc{font-size:17px}.branch-small{font-size:11px}.trail-title{margin-top:17px}.trail{min-height:40px}.progress{margin-top:18px}.result-view{padding:25px 0 70px}.result-layout{grid-template-columns:1fr;gap:37px}.result-paper{min-height:510px}.result-paper h2{font-size:clamp(45px,10.5vw,70px)}.result-paper .paper-emoji{font-size:120px}.result-copy h3{font-size:29px}.all-view{padding:32px 0 60px}.all-heading{display:block}.all-heading h2{letter-spacing:-2px}.all-intro{margin-top:20px}.all-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.all-card{min-height:285px}.all-card .name{font-size:21px}.safeline{display:none}}
+    @media(max-width:390px){.brand{font-size:24px}.navmeta .dot{display:none}.navmeta{font-size:8px}.hero h1{font-size:61px}.hero-art{height:370px}.poster{inset:17px 13px 16px 24px;padding:18px}.mini-browser{margin-top:28px}.identity-sticker span{font-size:23px}.identity-sticker b{font-size:6px}.stamp{bottom:5px;font-size:10px}.answer{padding:9px}.answer .answer-main{font-size:18px}.all-card .name{font-size:17px}.all-card{min-height:265px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+    @media print{.nav,.marquee,.section-foot,.hero,.quiz-view,.all-view,.result-actions,.result-head,.result-copy{display:none!important}.result-view{display:block!important}.result-layout{display:block}.result-paper{box-shadow:none;width:100%;min-height:80vh}}
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+ <div class="container">
+  <header class="nav">
+   <a class="brand" href="#" id="brand" aria-label="Friendvision — home"><span class="brand-mark">friendvision</span></a>
+   <div class="navmeta"><span class="dot"></span><span>Digital identity issue</span><button class="nav-action" id="nav-all" type="button">Meet the 8 types ↗</button></div>
+  </header>
+  <main>
+   <section id="home" class="home-view active-view" aria-label="Quiz home">
+    <div class="hero">
+     <div class="hero-copy">
+      <div class="issue"><span>FRIENDVISION PRESENTS</span><span>ISSUE NO. 01 ✳</span></div>
+      <h1><span class="line">DIGITAL</span><span class="line marker">IDENTITIES</span></h1>
+      <div class="hero-sub">Which one is yours?</div>
+      <p class="hero-note">Everyone has an internet alter ego. Some are living the glamorous life. Some haven't posted since 2019. Three tiny decisions. Eight very specific personalities. One painfully accurate result.</p>
+      <div class="hero-actions"><button class="primary" id="start" type="button">Find my internet self <span class="arr">→</span></button><button class="text-btn" id="explore" type="button">Peek at all 8 types</button></div>
+     </div>
+     <div class="hero-art" aria-label="Playful collage of eight digital archetypes">
+      <span class="star one" aria-hidden="true">✦</span><span class="star two" aria-hidden="true">✳</span><span class="swoosh" aria-hidden="true">xoxo!</span>
+      <div class="poster"><div class="poster-top"><span>WHO ARE YOU ONLINE?</span><span>EST. 2000-something</span></div><div class="mini-browser"><div class="browser-bar"><i></i><i></i><i></i><span class="browser-url">www.your-online-self.com</span></div><div class="browser-body"><p class="browser-title">Your internet personality, exposed. ♡</p><div class="identities-grid" id="hero-grid"></div></div></div></div>
+      <div class="stamp">100% UNOFFICIAL DIAGNOSIS ♡</div>
+     </div>
+    </div>
+   </section>
+   <section id="quiz" class="quiz-view" aria-label="Personality quiz" aria-live="polite">
+    <div class="game-top"><strong>Choose your own internet identity ↘</strong><div class="game-controls"><button id="back" type="button">← Back</button><button id="restart" type="button">Start over ↺</button></div></div>
+    <div class="quiz-stage">
+     <div class="question-area"><span class="q-number" id="q-counter">QUESTION 01 / 03</span><div class="q-card"><h2 id="question-text">Loading your personality...</h2></div><div class="answer-row"><button class="answer" id="yes" type="button"><span><span class="answer-main">YES</span><span class="answer-sub" id="yes-sub">THAT'S ME</span></span><span class="answer-arrow">↗</span></button><button class="answer" id="no" type="button"><span><span class="answer-main">NO</span><span class="answer-sub" id="no-sub">NOT EXACTLY</span></span><span class="answer-arrow">↘</span></button></div></div>
+     <aside><div class="side-note"><div class="topline"><span>THE PLOT THICKENS</span><span>↗ ↙</span></div><div class="branch-visual"><svg viewBox="0 0 200 130" aria-label="Three-step yes or no branching diagram" role="img"><path d="M100 17 V36 M100 36 L48 65 M100 36 L153 65 M48 65 L27 97 M48 65 L70 97 M153 65 L130 97 M153 65 L174 97" fill="none" stroke="#181818" stroke-width="2" stroke-dasharray="5 5"/><circle cx="100" cy="17" r="13" fill="#ce3f2b" stroke="#181818" stroke-width="2"/><circle cx="48" cy="65" r="14" fill="#a6e9d5" stroke="#181818" stroke-width="2"/><circle cx="153" cy="65" r="14" fill="#a6e9d5" stroke="#181818" stroke-width="2"/><circle cx="27" cy="97" r="11" fill="#181818"/><circle cx="70" cy="97" r="11" fill="#181818"/><circle cx="130" cy="97" r="11" fill="#181818"/><circle cx="174" cy="97" r="11" fill="#181818"/><text x="86" y="57" font-size="9" font-weight="bold" font-family="Arial" fill="#ce3f2b">YES</text><text x="126" y="57" font-size="9" font-weight="bold" font-family="Arial" fill="#ce3f2b">NO</text><text x="20" y="119" font-size="9" font-weight="bold" font-family="Arial">YOU?</text><text x="120" y="119" font-size="9" font-weight="bold" font-family="Arial">YOU?</text></svg></div><div><div class="branch-desc">Every click reveals a little too much.</div><p class="branch-small">Follow the arrows. Trust your gut. No overthinking.</p></div></div><div class="trail-title">Your route so far ↘</div><div class="trail" id="trail"><span class="trail-step">The plot hasn't started yet...</span></div><div class="progress" id="progress" aria-label="Question progress"></div></aside>
+    </div>
+   </section>
+   <section id="result" class="result-view" aria-label="Your personality result" aria-live="polite">
+    <div class="result-head"><span class="issue-line">YOUR DIGITAL IDENTITY HAS ENTERED THE CHAT ✳</span><button id="retake-top" type="button">↺ Take the quiz again</button></div>
+    <div class="result-layout"><article class="result-paper" id="result-paper"><div class="paper-top"><span>@FDV.4EVA</span><span>YOUR ONLINE ALTER EGO / 01</span></div><div class="paper-kicker">IT'S OFFICIAL. YOU'RE...</div><h2 id="result-title"><span>THE AESTHETIC ONE</span></h2><div class="paper-emoji" id="result-emoji" aria-hidden="true">📸</div><div class="paper-footer" id="result-motto">Tumblr walked so your socials could run.</div></article><div class="result-copy"><span class="eyebrow">THE INTERNET HAS SPOKEN</span><h3 id="result-hook">Your digital footprint says it all.</h3><p id="result-description"></p><div class="receipts"><div class="eyebrow">THE RECEIPTS ↘</div><div id="receipts-list"></div></div><div class="result-actions"><button class="primary" id="download" type="button">Save my result <span class="arr">↓</span></button><button class="outline" id="share" type="button">Share ↗</button><button class="outline" id="retake" type="button">↺ Retake</button></div><p id="share-status" class="status" aria-live="polite"></p></div></div>
+   </section>
+   <section id="all" class="all-view" aria-label="All eight identities"><div class="all-back"><button type="button" id="all-back">← Back to the quiz</button></div><div class="all-heading"><div><span class="eyebrow">MEET THE CAST / ALL 8 TYPES</span><h2>THE INTERNET<br/>IS A STAGE.</h2></div><p class="all-intro">Eight dramatically different ways to exist online. No one is normal here. Tap a type to see its full personality card.</p></div><div class="all-grid" id="all-grid"></div></section>
+  </main>
+  <div class="section-foot"><span>FRIENDVISION © / DIGITAL IDENTITY</span><span>TOO ONLINE TO BE OBJECTIVE</span><svg viewBox="0 0 64 40" fill="none" aria-hidden="true"><path d="M3 20C19 0 43-1 61 20 43 41 19 40 3 20Z" stroke="#181818" stroke-width="3"/><circle cx="32" cy="20" r="10" fill="#181818"/><path d="M51 5L54 0 57 5 62 8 56 10 54 16 51 11 47 8Z" fill="#ce3f2b"/></svg></div>
+ </div>
+</div>
+<script>
+(function(){
+'use strict';
+const profiles = {
+ glamour:{title:'THE GLAMOROUS ONE',short:'Glamorous',emoji:'💐',motto:'The glamorous life? Just another Tuesday.',hook:'Your camera roll belongs in a luxury campaign.',description:"You got a taste of the glamorous life and never looked back. A hundred and one red roses, perfect lighting, suspiciously effortless outfits. Your followers know what you had for brunch, but not how you make it all happen.",receipts:['101 red roses. Again.','Every day looks like a soft launch of a perfume.','The phrase “just a little treat” has lost all meaning.'],color:'#ce3f2b'},
+ spiritual:{title:'THE SPIRITUALLY AWAKENED ONE',short:'Spiritual',emoji:'🔮',motto:'Currently aligning. Do not disturb.',hook:'Your aura has better engagement than most accounts.',description:"You've been to a sound bath, a silent retreat and probably another dimension. Your stories feature healing crystals, moon phases and notes from your latest spiritual awakening. Mercury retrograde? You're already three steps ahead.",receipts:['A retreat is not a holiday. It is a lifestyle.','“The universe sent me a sign” is a recurring caption.','You can identify a red flag by its energy.'],color:'#a6e9d5'},
+ corporate:{title:'THE CORPORATE ONE',short:'Corporate',emoji:'💼',motto:'Sent from my ambition.',hook:'Your LinkedIn has become a personality trait.',description:"Your posts: your office, your desk, your latest win. Your reposts: other people's offices, desks and latest wins. You don't have a work-life balance; you have a well-lit work-life carousel.",receipts:['Your laptop gets more screen time than your friends.','Every coffee comes with a productivity update.','“Excited to announce” is your native language.'],color:'#e6e6fa'},
+ rich:{title:'THE MYSTERIOUSLY RICH ONE',short:'Mysterious rich',emoji:'🛥️',motto:'Out of office. Possibly forever.',hook:'Nobody knows your job. Everybody knows your location.',description:"That one unemployed friend who somehow sees more beaches in a year than most people see in a lifetime. One week you're in Capri, the next you're on a boat. Your funding source is humanity's greatest unsolved mystery.",receipts:['Monday: airport lounge. Wednesday: another ocean.','You have never explained what you do for a living.','Your location tag is doing all the storytelling.'],color:'#fee7ba'},
+ offline:{title:'THE CHRONICALLY OFFLINE ONE',short:'Chronically offline',emoji:'🕊️',motto:'Life is happening. Just not on here.',hook:'Your profile is basically a time capsule.',description:"Three photos across every account: one with friends, one from a wedding, and one with a baby. Your last caption was probably “life lately.” No one knows what you're doing and, frankly, you're thriving.",receipts:['Last seen: a very long time ago.','You have 37 unread DMs and zero concerns.','Your friends learn about your life in person.'],color:'#e8e8e8'},
+ online:{title:'THE CHRONICALLY ONLINE ONE',short:'Chronically online',emoji:'🫠',motto:'Sorry. I live here.',hook:'Your algorithm knows things your friends never will.',description:"Ninety-nine percent of your content is shitposts, chaotic photo dumps and memes understood by exactly two people: you and the original creator. You speak fluent niche internet reference and your screen time report is classified.",receipts:['You send memes instead of saying good morning.','Your photo dumps have no plot and excellent lore.','You know about a trend before it gets a name.'],color:'#a6e9d5'},
+ deadinside:{title:'THE DEAD INSIDE ONE',short:'Dead inside',emoji:'🌧️',motto:'It is not a phase. It is my feed.',hook:'Your stories look like a 2 a.m. playlist.',description:"Rainy windows, blurry streetlights, devastating quotes in tiny serif fonts. Your digital aesthetic is permanent melancholia with a side of cinematic introspection. Sometimes a black-and-white photo says it all.",receipts:['Your weather app is a mood board.','Rain on glass is an essential narrative device.','Every caption sounds like the last line of a novel.'],color:'#cfd4e3'},
+ aesthetic:{title:'THE AESTHETIC ONE',short:'Aesthetic',emoji:'🎞️',motto:'Tumblr walked so your socials could run.',hook:'Even your breakfast has art direction.',description:"Tumblr walked so your socials could run. Your camera roll is a museum of tiny details, accidental colour palettes and beautifully curated everyday moments. Nothing is random, especially when it looks random.",receipts:['Your grocery receipt matches your mood board.','Every coffee cup deserves a close-up.','You have a favourite shade of beige.'],color:'#fee4d9'}
+};
+const tree = {
+ start:{question:'If someone opened your profile, would they know what you’ve been up to?',yes:'feed',no:'rare',yesSub:'I KEEP THEM UPDATED',noSub:'GOOD LUCK FINDING OUT'},
+ feed:{question:'Is your feed at least a little bit curated?',yes:'curated',no:'unfiltered',yesSub:'THERE IS A VISION',noSub:'PURE CHAOS'},
+ rare:{question:'When you do post, is it usually about your personal growth?',yes:'growth',no:'vanish',yesSub:'EVOLVING ALWAYS',noSub:'I JUST EXIST'},
+ curated:{question:'Does your feed scream “I got a taste of the glamorous life”?',yes:'glamour',no:'aesthetic',yesSub:'LUXURY IS A MINDSET',noSub:'MORE MOOD BOARD'},
+ unfiltered:{question:'Are you basically running a meme account at this point?',yes:'online',no:'deadinside',yesSub:'THE LORE GOES DEEP',noSub:'IT’S GIVING SAD EDIT'},
+ growth:{question:'Does your personal growth happen mostly in an office?',yes:'corporate',no:'spiritual',yesSub:'CIRCLE BACK TO ME',noSub:'TRUST THE UNIVERSE'},
+ vanish:{question:'Do your rare posts involve airports, beaches or fancy hotels?',yes:'rich',no:'offline',yesSub:'LOCATION UNKNOWN',noSub:'POSTING? NEVER HEARD OF IT'}
+};
+let route=[],node='start',current='home',previous='home',currentResult='aesthetic';
+const $=id=>document.getElementById(id);
+function renderHero(){const order=['glamour','spiritual','corporate','rich','offline','online','deadinside','aesthetic'];$('hero-grid').innerHTML=order.map(k=>`<div class="identity-sticker"><span>${profiles[k].emoji}</span><b>${profiles[k].short}</b></div>`).join('');$('all-grid').innerHTML=order.map((k,i)=>`<button class="all-card" type="button" data-profile="${k}"><span class="smallcaps">IDENTITY NO. ${String(i+1).padStart(2,'0')}</span><span class="emoji" aria-hidden="true">${profiles[k].emoji}</span><span class="name">${profiles[k].title}</span><span class="tagline">${profiles[k].motto}</span><span class="link-arrow">↗</span></button>`).join('');document.querySelectorAll('.all-card').forEach(el=>el.addEventListener('click',()=>showResult(el.dataset.profile,true)))}
+function view(name){['home','quiz','result','all'].forEach(s=>$(s).classList.toggle('active-view',s===name));current=name;window.scrollTo({top:0,behavior:'smooth'});}
+function start(){node='start';route=[];drawQuestion();view('quiz')}
+function drawQuestion(){const q=tree[node];if(!q)return;$('question-text').textContent=q.question;$('q-counter').textContent=`QUESTION ${String(route.length+1).padStart(2,'0')} / 03`;$('yes-sub').textContent=q.yesSub;$('no-sub').textContent=q.noSub;$('back').disabled=route.length===0;$('trail').innerHTML=route.length?route.map((r,i)=>`<span class="trail-step">${i+1}. ${shortQuestion(r.node)} <b>${r.answer.toUpperCase()}</b></span>`).join(''):'<span class="trail-step">The plot hasn’t started yet...</span>';$('progress').innerHTML=Array.from({length:3},(_,i)=>`<div class="progress-bar ${i<=route.length?'filled':''}"></div>`).join('')}
+function shortQuestion(key){return({start:'Are you posting?',feed:'Curated feed?',rare:'Personal growth?',curated:'Glamorous life?',unfiltered:'Meme account?',growth:'Office growth?',vanish:'Another vacation?'})[key]||key}
+function choose(answer){const origin=node,dest=tree[node][answer];route.push({node:origin,answer});if(tree[dest]){node=dest;drawQuestion()}else showResult(dest,false)}
+function back(){if(current==='result'&&route.length){route.pop();node=route.length?tree[route[route.length-1].node][route[route.length-1].answer]:'start';drawQuestion();view('quiz')}else if(route.length){node=route.pop().node;drawQuestion()}else view('home')}
+function showResult(key,fromGallery){const p=profiles[key];if(!p)return;currentResult=key;previous=fromGallery?'all':'quiz';$('result-title').innerHTML='<span>'+p.title+'</span>';$('result-emoji').textContent=p.emoji;$('result-motto').textContent=p.motto;$('result-hook').textContent=p.hook;$('result-description').textContent=p.description;$('receipts-list').innerHTML=p.receipts.map(r=>`<div class="receipt"><span class="tick">✓</span><span>${r}</span></div>`).join('');$('share-status').textContent='';view('result')}
+function all(){previous=current;view('all')}
+function resultText(){const p=profiles[currentResult];return `I'm ${p.title} 💌\n${p.motto}\nWhich internet identity are you? Take the Friendvision quiz!`}
+async function share(){const msg=resultText();try{if(navigator.share){await navigator.share({title:'My Friendvision Digital Identity',text:msg});return}if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(msg);$('share-status').textContent='Copied! Paste it into your story or chat.';return}}catch(e){if(e.name==='AbortError')return}const temp=document.createElement('textarea');temp.value=msg;document.body.appendChild(temp);temp.select();try{document.execCommand('copy');$('share-status').textContent='Copied! Paste it into your story or chat.'}catch(e){$('share-status').textContent=msg}temp.remove()}
+function wrapLines(ctx,txt,maxW){const words=txt.split(' '),lines=[];let line='';for(const w of words){const tryLine=line?line+' '+w:w;if(ctx.measureText(tryLine).width>maxW&&line){lines.push(line);line=w}else line=tryLine}if(line)lines.push(line);return lines}
+function downloadCard(){const p=profiles[currentResult],canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;const c=canvas.getContext('2d');if(!c){$('share-status').textContent='Image export is not supported in this browser.';return}
+const ink='#181818',red='#ce3f2b',mint='#a6e9d5',paper='#f7f4ef';c.fillStyle=red;c.fillRect(0,0,1080,1920);c.fillStyle=mint;c.beginPath();c.arc(900,1530,500,0,Math.PI*2);c.fill();c.fillStyle=paper;c.beginPath();c.arc(-55,1700,260,0,Math.PI*2);c.fill();c.fillStyle=ink;c.fillRect(52,47,976,3);c.font='bold 25px Arial';c.fillStyle=paper;c.fillText('@FDV.4EVA',55,103);c.textAlign='right';c.fillText('DIGITAL IDENTITY / FRIENDVISION',1025,103);c.textAlign='left';c.save();c.translate(80,260);c.rotate(-.045);c.fillStyle=mint;c.fillRect(0,-54,562,84);c.fillStyle=ink;c.font='bold 33px Arial';c.fillText('IT\'S OFFICIAL. YOU\'RE...',18,2);c.restore();
+let lines;let fs=110;while(fs>57){c.font=`italic 900 ${fs}px Arial`;lines=wrapLines(c,p.title,930);if(lines.length<=3)break;fs-=4;}c.fillStyle=paper;let y=430;for(const l of lines){c.fillStyle=ink;const width=c.measureText(l).width;c.fillRect(68,y-fs*.82,Math.min(width+38,942),fs*1.08);c.fillStyle=paper;c.fillText(l,86,y);y+=fs*1.15}
+c.fillStyle=ink;c.font='bold italic 40px Arial';const motto=wrapLines(c,p.motto,720);motto.forEach((l,i)=>c.fillText(l,80,1010+i*56));
+c.font='245px "Apple Color Emoji","Segoe UI Emoji",Arial';c.fillText(p.emoji,675,1630);
+c.fillStyle=ink;c.font='bold 27px Arial';const copy=wrapLines(c,p.hook,630);copy.slice(0,3).forEach((l,i)=>c.fillText(l,80,1380+i*46));
+c.fillStyle=ink;c.fillRect(55,1780,970,3);c.font='bold 26px Arial';c.fillText('WHICH ONE IS YOURS?  ↗',70,1850);c.textAlign='right';c.fillText('FRIENDVISION',1020,1850);c.textAlign='left';const a=document.createElement('a');a.download=`friendvision-${currentResult}.png`;a.href=canvas.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();$('share-status').textContent='Your story-ready card has been saved.'}
+$('start').addEventListener('click',start);$('explore').addEventListener('click',all);$('nav-all').addEventListener('click',all);$('yes').addEventListener('click',()=>choose('yes'));$('no').addEventListener('click',()=>choose('no'));$('back').addEventListener('click',back);$('restart').addEventListener('click',start);$('retake').addEventListener('click',start);$('retake-top').addEventListener('click',start);$('download').addEventListener('click',downloadCard);$('share').addEventListener('click',share);$('all-back').addEventListener('click',()=>view(previous==='quiz'?'quiz':'home'));$('brand').addEventListener('click',e=>{e.preventDefault();view('home')});renderHero();
+})();
+</script>
+</body>
+</html>
